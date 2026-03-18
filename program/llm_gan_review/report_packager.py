@@ -26,11 +26,11 @@ class FinalReportPackager:
         output_root = self.workspace_dir / "final_report"
         output_root.mkdir(parents=True, exist_ok=True)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        task_dir = output_root / timestamp
+        task_dir = output_root / f"final_{timestamp}"
         counter = 1
         while task_dir.exists():
             counter += 1
-            task_dir = output_root / f"{timestamp}_{counter:02d}"
+            task_dir = output_root / f"final_{timestamp}_{counter:02d}"
         task_dir.mkdir(parents=True, exist_ok=True)
         paper_dir = task_dir / self._safe_name(paper_title)
         paper_dir.mkdir(parents=True, exist_ok=True)
@@ -41,7 +41,7 @@ class FinalReportPackager:
         artifacts: list[TranslationArtifact] = []
         for code, language in [("CN", "Simplified Chinese"), ("JP", "Japanese"), ("EG", "English")]:
             translated, mode = self._translate(report_text, language, preserve_english=report_text)
-            path = paper_dir / f"{code}.md"
+            path = paper_dir / f"FINAL_REPORT_{code}.md"
             path.write_text(translated, encoding="utf-8")
             artifacts.append(
                 TranslationArtifact(

@@ -2,7 +2,7 @@
   "gemini": {
     "provider": "google",
     "model": "gemini-2.5-flash",
-    "api_key": "你的Google API密钥",
+    "api_key": "AIzaSyCQvWSNhtoF_S5cLz8MQ7FDDJy0lUz7iyI",
     "base_url": "https://generativelanguage.googleapis.com/v1beta",
     "enabled": true,
     "preferred_models": [
@@ -21,7 +21,7 @@
   "gpt": {
     "provider": "openrouter",
     "model": "meta-llama-3-8b-instruct:free",
-    "api_key": "你的OpenRouter API密钥",
+    "api_key": "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",
     "base_url": "https://openrouter.ai/api/v1",
     "enabled": true,
     "preferred_models": [

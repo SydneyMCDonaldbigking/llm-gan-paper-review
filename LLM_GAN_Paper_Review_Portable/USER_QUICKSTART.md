@@ -23,11 +23,6 @@ D:\anaconda\envs\for_codeX\python.exe -m uvicorn review_api:app --host 127.0.0.1
 
 Do not close this window while the program is running.
 
-Optional future packaging path:
-
-- `program\build_portable.ps1`
-  can be used to build a Windows portable bundle with `launcher.exe`
-
 ## 3. Open The Web Page
 
 Open this address in your browser:

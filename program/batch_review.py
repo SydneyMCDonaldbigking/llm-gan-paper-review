@@ -103,9 +103,14 @@ def main() -> None:
         external_report_dir=external_report_dir,
         config=config,
     )
+    batch_literature_paths = _write_batch_literature_reviews(
+        report_text=final_batch_report_path.read_text(encoding="utf-8"),
+        external_report_dir=external_report_dir,
+        config=config,
+    )
     exported_batch_files = _export_batch_reports(
         external_report_dir=external_report_dir,
-        paths=[final_batch_report_path, *batch_translation_paths],
+        paths=[final_batch_report_path, *batch_translation_paths, *batch_literature_paths],
     )
     summary_path = batch_dir / "BATCH_SUMMARY.txt"
     summary_lines = ["Batch Review Summary", "", f"papers={len(manifest)}", ""]
@@ -464,11 +469,11 @@ def _handle_remove_readonly(func, path, excinfo) -> None:
 def _create_external_report_dir(workspace_dir: Path, timestamp: str) -> Path:
     root = workspace_dir / "final_report"
     root.mkdir(parents=True, exist_ok=True)
-    batch_dir = root / timestamp
+    batch_dir = root / f"final_{timestamp}"
     counter = 1
     while batch_dir.exists():
         counter += 1
-        batch_dir = root / f"{timestamp}_{counter:02d}"
+        batch_dir = root / f"final_{timestamp}_{counter:02d}"
     batch_dir.mkdir(parents=True, exist_ok=True)
     return batch_dir
 
@@ -487,9 +492,9 @@ def _export_paper_reports(
     if final_report_bundle:
         bundle_path = Path(final_report_bundle)
         for name in (
-            "CN.md",
-            "JP.md",
-            "EG.md",
+            "FINAL_REPORT_CN.md",
+            "FINAL_REPORT_JP.md",
+            "FINAL_REPORT_EG.md",
             "LITERATURE_REVIEW_CN.md",
             "LITERATURE_REVIEW_JP.md",
             "LITERATURE_REVIEW_EG.md",
@@ -524,13 +529,30 @@ def _write_batch_translations(report_text: str, external_report_dir: Path, confi
     generated_paths: list[Path] = []
     for code, language in [("CN", "Simplified Chinese"), ("JP", "Japanese"), ("EG", "English")]:
         translated, _mode = _translate_report(client, report_text, language)
-        path = external_report_dir / f"{code}.md"
+        path = external_report_dir / f"FINAL_BATCH_REPORT_{code}.md"
+        path.write_text(translated, encoding="utf-8")
+        generated_paths.append(path)
+    return generated_paths
+
+
+def _write_batch_literature_reviews(report_text: str, external_report_dir: Path, config: AppConfig) -> list[Path]:
+    client = build_client(config.gpt)
+    literature_review_en, _mode = _generate_batch_literature_review(client, report_text)
+    generated_paths: list[Path] = []
+    for code, language in [("CN", "Simplified Chinese"), ("JP", "Japanese"), ("EG", "English")]:
+        if code == "EG":
+            translated = literature_review_en
+        else:
+            translated, _ = _translate_report(client, literature_review_en, language)
+        path = external_report_dir / f"BATCH_LITERATURE_REVIEW_{code}.md"
         path.write_text(translated, encoding="utf-8")
         generated_paths.append(path)
     return generated_paths
 
 
 def _translate_report(client, report_text: str, target_language: str) -> tuple[str, str]:
+    if target_language == "English":
+        return report_text, "source"
     prompt = "\n".join(
         [
             f"Target language: {target_language}",
@@ -549,6 +571,56 @@ def _translate_report(client, report_text: str, target_language: str) -> tuple[s
         return response.content, "api"
     except Exception:
         return _fallback_translation(report_text, target_language), "fallback"
+
+
+def _generate_batch_literature_review(client, report_text: str) -> tuple[str, str]:
+    prompt = "\n".join(
+        [
+            "Write a literature-review style comparative synthesis based only on the batch final report below.",
+            "Use markdown.",
+            "Include these sections exactly:",
+            "1. Batch Scope",
+            "2. Common Strengths",
+            "3. Common Weaknesses",
+            "4. Evidence and Evaluation Trends",
+            "5. Cross-Paper Positioning",
+            "6. Overall Takeaway",
+            "Do not invent new claims beyond the report.",
+            "",
+            report_text,
+        ]
+    )
+    try:
+        response = client.generate(
+            system_prompt="You are a precise research writing assistant producing literature-review style comparative summaries.",
+            user_prompt=prompt,
+        )
+        return response.content, "api"
+    except Exception:
+        fallback = "\n".join(
+            [
+                "# Batch Literature Review",
+                "",
+                "## Batch Scope",
+                "- Derived from the final batch report.",
+                "",
+                "## Common Strengths",
+                "- See the batch report for aggregate strengths and strongest papers.",
+                "",
+                "## Common Weaknesses",
+                "- See the batch report for recurring weaknesses and risk categories.",
+                "",
+                "## Evidence and Evaluation Trends",
+                "- This fallback preserves report-grounded conclusions without inventing new evidence.",
+                "",
+                "## Cross-Paper Positioning",
+                "- Interpret comparative standing using the batch ranking and recommendation counts.",
+                "",
+                "## Overall Takeaway",
+                "- The overall takeaway should follow the final batch report and its evidence gaps.",
+            ]
+        )
+        return fallback, "fallback"
 
 
 def _fallback_translation(report_text: str, target_language: str) -> str:
