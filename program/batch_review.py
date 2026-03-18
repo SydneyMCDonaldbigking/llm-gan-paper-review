@@ -464,11 +464,11 @@ def _handle_remove_readonly(func, path, excinfo) -> None:
 def _create_external_report_dir(workspace_dir: Path, timestamp: str) -> Path:
     root = workspace_dir / "final_report"
     root.mkdir(parents=True, exist_ok=True)
-    batch_dir = root / f"{timestamp}_batch"
+    batch_dir = root / timestamp
     counter = 1
     while batch_dir.exists():
         counter += 1
-        batch_dir = root / f"{timestamp}_batch_{counter:02d}"
+        batch_dir = root / f"{timestamp}_{counter:02d}"
     batch_dir.mkdir(parents=True, exist_ok=True)
     return batch_dir
 
@@ -486,7 +486,14 @@ def _export_paper_reports(
     _copy_if_exists(review_dir / "FINAL_REPORT.md", paper_report_dir / "FINAL_REPORT.md")
     if final_report_bundle:
         bundle_path = Path(final_report_bundle)
-        for name in ("CN.md", "JP.md", "EG.md"):
+        for name in (
+            "CN.md",
+            "JP.md",
+            "EG.md",
+            "LITERATURE_REVIEW_CN.md",
+            "LITERATURE_REVIEW_JP.md",
+            "LITERATURE_REVIEW_EG.md",
+        ):
             _copy_if_exists(bundle_path / name, paper_report_dir / name)
     return paper_report_dir
 
