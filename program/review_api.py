@@ -33,7 +33,6 @@ WORKSPACE_DIR = get_workspace_dir()
 BUNDLE_DIR = get_bundle_dir()
 WEB_DIR = BUNDLE_DIR / "web"
 STATIC_DIR = WEB_DIR / "static"
-CONFIG = AppConfig.load((WORKSPACE_DIR / "api_settings" / "llm_api_config.json") if (WORKSPACE_DIR / "api_settings" / "llm_api_config.json").exists() else (ROOT_DIR / "llm_api_config.json"))
 app = FastAPI(title="LLM-GAN Review API", version="0.2.0")
 API_RUNS_DIR = ROOT_DIR / "api_runs"
 JOBS_DIR = API_RUNS_DIR / "jobs"
@@ -72,7 +71,16 @@ def index() -> FileResponse:
 @app.get("/health")
 def health() -> dict:
     running_jobs = sum(1 for job in _load_jobs() if job["status"] == "running")
-    return {"status": "ok", "running_jobs": running_jobs}
+    return {
+        "status": "ok",
+        "running_jobs": running_jobs,
+        "config": _get_config_status(),
+    }
+
+
+@app.get("/config-status")
+def config_status() -> dict:
+    return _get_config_status()
 
 
 @app.get("/papers")
@@ -129,7 +137,7 @@ def review_history_item(run_id: str) -> dict:
 
 @app.post("/reviews/run")
 def run_review_sync(request: ReviewRequest) -> dict:
-    orchestrator = ReviewOrchestrator(root_dir=ROOT_DIR, config=CONFIG)
+    orchestrator = ReviewOrchestrator(root_dir=ROOT_DIR, config=_load_config())
     result = orchestrator.run_review(
         _resolve_paper_path(request.paper),
         rounds=request.rounds,
@@ -238,7 +246,7 @@ def _run_review_job(job_id: str, request_body: dict) -> None:
                 },
             )
             monitor.start()
-            orchestrator = ReviewOrchestrator(root_dir=ROOT_DIR, config=CONFIG)
+            orchestrator = ReviewOrchestrator(root_dir=ROOT_DIR, config=_load_config())
             result = orchestrator.run_review(
                 _resolve_paper_path(request_body["paper"]),
                 rounds=request_body.get("rounds", 2),
@@ -313,7 +321,7 @@ def _run_batch_job(job_id: str, request_body: dict) -> None:
                         }
                     },
                 )
-                orchestrator = ReviewOrchestrator(root_dir=ROOT_DIR, config=CONFIG)
+                orchestrator = ReviewOrchestrator(root_dir=ROOT_DIR, config=_load_config())
                 result = orchestrator.run_review(
                     _resolve_paper_path(entry["paper"]),
                     rounds=entry.get("rounds", 2),
@@ -588,7 +596,7 @@ def _write_api_run(kind: str, request_body: dict, result: dict) -> str:
 def _execute_batch(request: BatchRequest) -> dict:
     manifest: list[dict] = []
     for entry in request.entries:
-        orchestrator = ReviewOrchestrator(root_dir=ROOT_DIR, config=CONFIG)
+        orchestrator = ReviewOrchestrator(root_dir=ROOT_DIR, config=_load_config())
         result = orchestrator.run_review(
             _resolve_paper_path(entry.paper),
             rounds=entry.rounds,
@@ -624,6 +632,46 @@ def _execute_batch(request: BatchRequest) -> dict:
 
 def _utc_now() -> str:
     return datetime.now(timezone.utc).isoformat()
+
+
+def _config_path() -> Path:
+    workspace_config = WORKSPACE_DIR / "api_settings" / "llm_api_config.json"
+    if workspace_config.exists():
+        return workspace_config
+    return ROOT_DIR / "llm_api_config.json"
+
+
+def _load_config() -> AppConfig:
+    return AppConfig.load(_config_path())
+
+
+def _get_config_status() -> dict:
+    path = _config_path()
+    status = {
+        "config_path": str(path),
+        "config_exists": path.exists(),
+        "google_configured": False,
+        "openrouter_configured": False,
+        "google_model": "",
+        "openrouter_model": "",
+        "load_error": "",
+        "last_modified": "",
+    }
+    if not path.exists():
+        status["load_error"] = "Config file not found."
+        return status
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+        gemini = raw.get("gemini", {})
+        gpt = raw.get("gpt", {})
+        status["google_configured"] = bool(str(gemini.get("api_key", "")).strip())
+        status["openrouter_configured"] = bool(str(gpt.get("api_key", "")).strip())
+        status["google_model"] = str(gemini.get("model", "")).strip()
+        status["openrouter_model"] = str(gpt.get("model", "")).strip()
+        status["last_modified"] = datetime.fromtimestamp(path.stat().st_mtime, tz=timezone.utc).isoformat()
+    except Exception as exc:
+        status["load_error"] = str(exc)
+    return status
 
 
 def _resolve_paper_path(paper_arg: str) -> Path:

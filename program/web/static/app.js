@@ -18,7 +18,20 @@ async function fetchJson(url, options = {}) {
 async function refreshHealth() {
   try {
     const health = await fetchJson("/health");
-    document.getElementById("healthChip").textContent = `API ${health.status} | running ${health.running_jobs}`;
+    const config = health.config || {};
+    const providerBits = [
+      `Google ${config.google_configured ? "ok" : "missing"}`,
+      `OpenRouter ${config.openrouter_configured ? "ok" : "missing"}`,
+    ];
+    document.getElementById("healthChip").textContent = `API ${health.status} | running ${health.running_jobs} | ${providerBits.join(" | ")}`;
+    const hint = document.getElementById("uploadHint");
+    if (config.load_error) {
+      hint.textContent = `配置读取失败：${config.load_error}`;
+    } else if (config.config_exists) {
+      hint.textContent = `当前配置：${config.config_path}`;
+    } else {
+      hint.textContent = "未找到 api_settings/llm_api_config.json";
+    }
   } catch (error) {
     document.getElementById("healthChip").textContent = `API error: ${error.message}`;
   }
