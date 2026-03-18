@@ -58,6 +58,35 @@ That makes the review process:
 - `final_report/`
   User-facing exported reports
 
+## Portable EXE
+
+If you want the download-and-run version, use:
+
+- `LLM_GAN_Paper_Review_Portable/LLM_GAN_Paper_Review.exe`
+
+The portable app reads and writes files next to the exe:
+
+- `LLM_GAN_Paper_Review_Portable/api_settings/`
+- `LLM_GAN_Paper_Review_Portable/essay/`
+- `LLM_GAN_Paper_Review_Portable/final_report/`
+
+## API Configuration Reminder
+
+Both model providers should be configured before running:
+
+- Google / Gemini
+- OpenRouter / GPT-side model
+
+For the source-code workflow, edit:
+
+- `api_settings/llm_api_config.json`
+
+For the portable exe workflow, edit:
+
+- `LLM_GAN_Paper_Review_Portable/api_settings/llm_api_config.json`
+
+If only one side is configured, the debate can fall back or degrade.
+
 ## Quick Start
 
 Start the web app:
@@ -70,6 +99,22 @@ D:\anaconda\envs\for_codeX\python.exe -m uvicorn review_api:app --host 127.0.0.1
 Open:
 
 - [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+
+## Output Locations
+
+If you run from command line / source code:
+
+- final user-facing reports: `final_report/`
+- review runtime repository: `program/review_repo/`
+- batch runtime outputs: `program/batch_runs/`
+- API/job runtime state: `program/api_runs/`
+
+If you run from the portable exe:
+
+- final user-facing reports: `LLM_GAN_Paper_Review_Portable/final_report/`
+- uploaded papers: `LLM_GAN_Paper_Review_Portable/essay/`
+- API config: `LLM_GAN_Paper_Review_Portable/api_settings/`
+- runtime internals: `LLM_GAN_Paper_Review_Portable/program_runtime/`
 
 ## Docs
 
