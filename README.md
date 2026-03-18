@@ -1,33 +1,88 @@
-# 使用说明
+# llm-gan-paper-review
 
-现在这个项目已经整理成 3 个主要文件夹：
+Git-first adversarial paper review system with multi-round LLM debate, DSPy orchestration, judge pipelines, and multilingual final reports.
 
-- `program`
-  所有代码、前端、后端、运行产物都在这里。
-- `essay`
-  把要审稿的论文 PDF 放到这里。
-- `api_settings`
-  把模型 API 配置放到这里，目前使用的是 `llm_api_config.json`。
+## What It Does
 
-最简单的用法：
+This project turns paper reviewing into a tracked debate workflow:
 
-1. 把论文放进 `essay/`
-2. 检查 `api_settings/llm_api_config.json`
-3. 进入 `program/`
-4. 启动网页界面
+- `Gemini / Gemma` acts as the critic
+- `GPT / OpenRouter` acts as the defender
+- `DSPy` helps orchestrate synthesis, issue merge, checklists, judge summaries, and recommendation logic
+- every round is written to disk and committed into a Git review repository
+- final reports are exported in Chinese, Japanese, and English
+
+The system supports both:
+
+- evidence-backed papers
+- code-backed papers with executable reproducibility commands
+
+## Why It Is Different
+
+Instead of producing a one-shot review summary, this system keeps the full review history:
+
+- who attacked what
+- how the defense responded
+- whether a round was real progress or just busywork
+- when escalation happened
+- how the final verdict was reached
+
+That makes the review process:
+
+- auditable
+- replayable
+- easier to debug
+- easier to present
+
+## Main Features
+
+- Multi-round critic vs defender debate
+- Git-first round tracking
+- Busywork detection
+- PUA-style escalation
+- DSPy-assisted orchestration
+- Evidence judge for claims, tables, and report alignment
+- Code judge for reproducibility commands and metric checks
+- Frontend console for progress and debate viewing
+- Single-paper and batch review flows
+- Multilingual final report packaging
+
+## Folder Layout
+
+- `program/`
+  Main codebase, API server, frontend, and scripts
+- `essay/`
+  PDF papers for review
+- `api_settings/`
+  API configuration
+- `final_report/`
+  User-facing exported reports
+
+## Quick Start
+
+Start the web app:
 
 ```powershell
+cd "C:\Users\zzyyds\Desktop\LLM_GAN_paper\program"
 D:\anaconda\envs\for_codeX\python.exe -m uvicorn review_api:app --host 127.0.0.1 --port 8000
 ```
 
-然后打开：
+Open:
 
-```text
-http://127.0.0.1:8000/
-```
+- [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
 
-如果想命令行直接跑：
+## Docs
 
-```powershell
-D:\anaconda\envs\for_codeX\python.exe program\run_review.py --paper "CUFE at SemEval-2016.pdf" --rounds 1
-```
+- [AGENT_ENV_SETUP.md](AGENT_ENV_SETUP.md)
+- [USER_QUICKSTART.md](USER_QUICKSTART.md)
+- [program/README.md](program/README.md)
+
+## Current Status
+
+This repository is suitable for:
+
+- personal use
+- internal demos
+- pilot testing
+
+It should still be treated as a beta system rather than a hardened production service.

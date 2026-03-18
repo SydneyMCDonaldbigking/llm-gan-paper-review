@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Runtime outputs
+program/review_repo/
+program/batch_runs/
+program/api_runs/
+final_report/
+
+# Local environment / editor noise
+.DS_Store
+Thumbs.db
