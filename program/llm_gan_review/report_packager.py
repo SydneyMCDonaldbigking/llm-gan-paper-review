@@ -34,14 +34,16 @@ class FinalReportPackager:
         task_dir.mkdir(parents=True, exist_ok=True)
         paper_dir = task_dir / self._safe_name(paper_title)
         paper_dir.mkdir(parents=True, exist_ok=True)
+        report_dir = paper_dir / f"{timestamp}_finalreport"
+        report_dir.mkdir(parents=True, exist_ok=True)
 
-        final_report_path = paper_dir / "FINAL_REPORT.md"
+        final_report_path = report_dir / "FINAL_REPORT.md"
         final_report_path.write_text(report_text, encoding="utf-8")
 
         artifacts: list[TranslationArtifact] = []
         for code, language in [("CN", "Simplified Chinese"), ("JP", "Japanese"), ("EG", "English")]:
             translated, mode = self._translate(report_text, language, preserve_english=report_text)
-            path = paper_dir / f"FINAL_REPORT_{code}.md"
+            path = report_dir / f"FINAL_REPORT_{code}.md"
             path.write_text(translated, encoding="utf-8")
             artifacts.append(
                 TranslationArtifact(
@@ -70,8 +72,9 @@ class FinalReportPackager:
             )
         return {
             "task_dir": str(task_dir),
-            "bundle_dir": str(paper_dir),
+            "bundle_dir": str(report_dir),
             "paper_dir": str(paper_dir),
+            "report_dir": str(report_dir),
             "paper_title": paper_title,
             "final_report_path": str(final_report_path),
             "translations": [artifact.__dict__ for artifact in artifacts],

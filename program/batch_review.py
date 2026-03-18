@@ -487,14 +487,19 @@ def _export_paper_reports(
 ) -> Path:
     paper_report_dir = external_report_dir / f"{index:02d}_{paper_stem}"
     paper_report_dir.mkdir(parents=True, exist_ok=True)
+    report_dir = paper_report_dir / f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_finalreport"
+    report_dir.mkdir(parents=True, exist_ok=True)
     review_dir = target_dir / "reviews"
-    _copy_if_exists(review_dir / "FINAL_REPORT.md", paper_report_dir / "FINAL_REPORT.md")
+    _copy_if_exists(review_dir / "FINAL_REPORT.md", report_dir / "FINAL_REPORT.md")
     if final_report_bundle:
         bundle_path = Path(final_report_bundle)
         for name in (
             "FINAL_REPORT_CN.md",
             "FINAL_REPORT_JP.md",
             "FINAL_REPORT_EG.md",
+        ):
+            _copy_if_exists(bundle_path / name, report_dir / name)
+        for name in (
             "LITERATURE_REVIEW_CN.md",
             "LITERATURE_REVIEW_JP.md",
             "LITERATURE_REVIEW_EG.md",
@@ -504,10 +509,12 @@ def _export_paper_reports(
 
 
 def _export_batch_reports(external_report_dir: Path, paths: list[Path]) -> list[str]:
+    report_dir = external_report_dir / f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_finalreport"
+    report_dir.mkdir(parents=True, exist_ok=True)
     exported: list[str] = []
     for path in paths:
         if path.exists():
-            target = external_report_dir / path.name
+            target = report_dir / path.name
             if path.resolve() != target.resolve():
                 shutil.copy2(path, target)
             exported.append(str(target))
