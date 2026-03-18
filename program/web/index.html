@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LLM-GAN Review Console</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">LLM-GAN Review Console</p>
+          <h1>看 AI 审稿博弈，不用守终端。</h1>
+          <p class="hero-text">
+            这里会实时显示 Gemini Critic、GPT Defender、Busywork、PUA 和 Judge 的推进状态，
+            并把每一轮的攻防内容按时间线展开。
+          </p>
+        </div>
+        <div class="status-panel">
+          <div class="status-chip" id="healthChip">API checking...</div>
+          <div class="status-meta" id="runMeta">尚未启动任务</div>
+          <div class="phase-strip" id="phaseStrip">
+            <span class="phase-pill">Queued</span>
+            <span class="phase-pill">Critic</span>
+            <span class="phase-pill">Defender</span>
+            <span class="phase-pill">Judge</span>
+            <span class="phase-pill">Report</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="grid">
+        <article class="card form-card">
+          <div class="card-head">
+            <h2>启动单篇审稿</h2>
+            <p>支持纯论文 evidence 模式，也支持带代码目录和运行命令的 code-backed 模式。</p>
+          </div>
+          <form id="reviewForm" class="form">
+            <label>
+              <span>论文路径</span>
+              <div class="upload-row">
+                <button type="button" class="secondary-btn" id="pickPaperBtn">选择论文文件</button>
+                <span class="upload-hint" id="uploadHint">可选择一个或多个 PDF，自动放入 essay。</span>
+              </div>
+              <input type="file" id="paperPicker" accept=".pdf,application/pdf" multiple hidden />
+              <div class="paper-library" id="paperLibrary"></div>
+            </label>
+            <label>
+              <span>轮数</span>
+              <input name="rounds" type="number" min="1" max="6" value="2" required />
+            </label>
+            <label>
+              <span>代码目录</span>
+              <input name="code_dir" placeholder="可留空，例如 fixtures\\code_paper_stub" />
+            </label>
+            <label>
+              <span>运行命令</span>
+              <input name="run_command" placeholder="可留空，例如 D:\\anaconda\\envs\\for_codeX\\python.exe run_metrics.py" />
+            </label>
+            <button type="submit" class="primary-btn">开始博弈</button>
+            <button type="button" class="danger-btn" id="cleanupBtn">一键清空历史记录和运行文件</button>
+          </form>
+        </article>
+
+        <article class="card progress-card">
+          <div class="card-head">
+            <h2>实时进度</h2>
+            <p>这里会跟踪 round、阶段、最新文件和当前模式。</p>
+          </div>
+          <div class="progress-shell">
+            <div class="progress-bar">
+              <div class="progress-value" id="progressValue"></div>
+            </div>
+            <div class="progress-labels">
+              <strong id="progressPercent">0%</strong>
+              <span id="progressMessage">等待任务</span>
+            </div>
+          </div>
+          <dl class="facts" id="progressFacts">
+            <div><dt>状态</dt><dd>-</dd></div>
+            <div><dt>当前回合</dt><dd>-</dd></div>
+            <div><dt>阶段</dt><dd>-</dd></div>
+            <div><dt>模式</dt><dd>-</dd></div>
+          </dl>
+          <div class="file-tags" id="fileTags"></div>
+        </article>
+      </section>
+
+      <section class="grid lower-grid">
+        <article class="card jobs-card">
+          <div class="card-head">
+            <h2>任务历史</h2>
+            <p>点开某个任务后，右侧会切换到对应的博弈过程和最终结果。</p>
+          </div>
+          <div id="jobsList" class="jobs-list"></div>
+        </article>
+
+        <article class="card detail-card">
+          <div class="card-head">
+            <h2>任务详情</h2>
+            <p id="detailTitle">还没有选中任务。</p>
+          </div>
+          <div class="tab-bar">
+            <button class="tab active" data-tab="report">Final Report</button>
+            <button class="tab" data-tab="debate">Live Debate</button>
+            <button class="tab" data-tab="judge">Judge</button>
+            <button class="tab" data-tab="score">Scorecard</button>
+          </div>
+          <div class="detail-panels">
+            <section class="detail-panel active" id="panel-report">
+              <pre id="panel-report-text"></pre>
+            </section>
+            <section class="detail-panel" id="panel-debate">
+              <div class="debate-timeline" id="debateTimeline"></div>
+            </section>
+            <section class="detail-panel" id="panel-judge">
+              <div class="judge-layout">
+                <pre id="panel-judge-text"></pre>
+                <pre id="panel-timeline-text"></pre>
+              </div>
+            </section>
+            <section class="detail-panel" id="panel-score">
+              <pre id="panel-score-text"></pre>
+            </section>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,83 @@
+2026-03-16
+- Initialized the project README and API config template.
+- Built the first runnable prototype with PDF parsing, Git-backed review rounds, and API clients.
+- Verified Gemini and OpenRouter API connectivity and added response compatibility fixes.
+- Added multi-round review orchestration, Busywork detection, PUA escalation, and structured judge scorecards.
+- Added a Synthesis Engine that unifies round-level debate into one paper strengths/weaknesses summary.
+- Added txt-based process logging so major implementation steps are recorded in plain text.
+2026-03-17
+- Identified the next major gap: missing structured issue tracking across rounds.
+- Added an issue tracker so final synthesis is grounded in structured claims, responses, and unresolved risks.
+- Updated the final report to include an issue ledger alongside the unified synthesis.
+- Started work on canonical cross-round issue merging and stronger figure/table evidence checks.
+- Added canonical issue outputs and improved judge scorecards with figure/table reference extraction.
+- Observed that canonical issue merging is still too conservative and needs smarter cross-round similarity matching.
+- Began upgrading canonical issue merging toward semantic similarity and adding a final unified scorecard.
+- Added approximate semantic canonical issue merging and reduced canonical issues from 12 to 11 on the test paper.
+- Added FINAL_SCORECARD.json and embedded the unified scorecard into the final report.
+- Added canonical issue history so each main issue now tracks round-by-round status, busywork, and PUA evolution.
+- Extended the final scorecard to count persistent canonical issues across rounds.
+- Began making synthesis explicitly history-aware so unresolved issues can cite round-by-round evolution.
+- Began feeding canonical issue history back into later-round prompts so repeated unresolved issues stay under pressure.
+- Began converting canonical issue history into defender checklists so repeated gaps must be answered explicitly.
+- Tightened the checklist plan: generate defender checklists directly from canonical issue objects, not from text summaries.
+- Added quota-aware provider health tracking so a provider that exhausts quota in one round is blocked for the rest of the run instead of wasting additional paid calls.
+- Split quota exhaustion from generic fallback in PUA so the accountability trail records budget interruptions separately from weak model behavior.
+- Added provider health outputs to the final report and metadata so each run shows which API paths stayed live and which were intentionally stopped.
+- Improved PDF text normalization and title extraction so generated reports are less noisy when source PDFs contain mojibake-like glyphs from extraction.
+- Added a UTF-8 safe CLI print path so Windows console encoding no longer makes successful runs look broken.
+- Refined title extraction toward title-block reconstruction instead of picking the proceedings header line.
+- Re-ran a clean 2-round end-to-end review after the parser and quota-stop updates so the current review_repo reflects the latest behavior and report formatting.
+- Added a table consistency checker so the evidence judge can flag suspicious table/result patterns using local text heuristics.
+- Added a batch_review.py entry point so multiple PDF papers can be reviewed serially and archived into one batch output folder.
+- Rewrote the README in clean ASCII so project usage notes are readable again after earlier encoding damage.
+- Updated the Google model fallback chain so Gemini rounds can try Gemma 3 1B/4B/12B/27B with the same API key before falling back further.
+- Added Gemma 3 2B into the same Google fallback chain so the critic can try 1B/2B/4B/12B/27B before older Gemini fallbacks.
+- Upgraded table parsing from loose numeric-line scanning to grouped table blocks so evidence checks can reason over more structured result fragments.
+- Added a code-backed judge path that stages a source snapshot and executes a reproducibility command, producing code-mode judge reports and scorecards.
+- Added aggregate batch outputs with ranking, average score, and recommendation counts so multi-paper runs produce a usable overview instead of only per-paper folders.
+- Structured the code judge output with command kind, duration, stdout/stderr previews, and failure signatures so code-mode runs are easier to compare and debug.
+- Strengthened table checks with block-level structure signals such as header-like rows and data-row counts, while filtering obvious proceedings-header noise from faux table blocks.
+- Added table captions to the parsed paper artifact and started feeding them into table consistency checks.
+- Began persisting structured judge-side artifacts to disk, including code execution JSON and evidence table-consistency JSON plus a review-level TABLE_ANALYSIS.txt.
+- Added a markdown batch leaderboard so multi-paper runs have a human-readable ranking view in addition to JSON aggregates.
+- Matched parsed table captions onto extracted table blocks so review artifacts can show which caption most likely belongs to each numeric block.
+- Expanded code-mode run artifacts into a fuller per-round bundle with execution metadata plus dedicated stdout/stderr files and a run manifest.
+- Replaced simple caption-by-index matching with token-overlap matching so table captions attach to blocks based more on content than position.
+- Added batch-spec support so one batch can mix plain evidence-backed papers and code-backed runs with per-paper commands.
+- Added batch-level insights that summarize strongest paper, weakest paper, top issue categories, status distribution, and common persistent issues.
+- Added basic batch-spec validation so malformed mixed-batch entries fail early instead of halfway through a long run.
+- Added FINAL_BATCH_REPORT.md generation so each batch now gets a single human-readable wrap-up, not just raw manifests and rankings.
+- Expanded batch insights with per-category example issue titles so common risks are easier to interpret instead of reading only counts.
+- Added claim sentence extraction and a claim-alignment checker so evidence mode can estimate whether reported conclusions are actually supported by figure/table evidence.
+- Began persisting claim-alignment outputs as first-class judge artifacts and exposing them in review-level table analysis summaries.
+- Added paper-side metric claim extraction so code-mode runs can start comparing executed outputs against metrics claimed in the paper.
+- Added a minimal FastAPI shell with health, single-review, and batch-review endpoints so the project has a first platformization foothold.
+- Tightened claim extraction by filtering result-like boilerplate such as notes, examples, and citation-heavy sentences before they enter claim alignment.
+- Added explicit table/figure number hints to claim alignment so sentences mentioning Table X or Figure Y prioritize evidence with the same identifier.
+- Tightened claim deduplication so lightweight rewrites like "Our models achieved..." versus "We achieved..." do not inflate evidence-claim counts.
+- Added semantic penalties to claim alignment so ranking claims are not falsely supported by dataset split tables that only share task tokens.
+- Reworked caption extraction to use line-based filtering, deduplicate fragments, and drop "Table X shows ..." body sentences from the caption pool.
+- Added caption text cleanup for trailing OCR fragments so clipped suffixes like "Note: av-" or hanging hyphen pieces do not survive into evidence analysis.
+- Upgraded code-mode metric alignment to prefer tagged metric-value pairs, so stdout/stderr matches are grounded in nearby metric labels instead of raw number overlap alone.
+- Added table-block tail cleanup so hardware lines and trailing "Table X shows" body text do not remain attached to extracted result blocks.
+- Started feeding judge-detected unsupported claims into the issue ledger so evidence gaps become first-class canonical issues instead of staying buried in artifacts.
+- Split unsupported claims into typed evidence gaps such as missing rank support, missing metric support, and metric mismatch risk so scorecards and issue ledgers can explain why a claim failed alignment.
+- Added claim-to-subclaim expansion so mixed sentences that contain both metric values and ranking statements are judged in smaller units instead of being forced into one coarse unsupported bucket.
+- Added judge evidence-gap summaries to final reports so unsupported-claim categories are visible without opening raw artifacts.
+- Expanded code-mode outputs with environment snapshots, test summaries, and partial metric-alignment tracking.
+- Added API-side run history persistence and history endpoints for review and batch calls.
+- Extended batch aggregates and insights with unsupported-claim breakdowns so common evidence failures can be compared across papers.
+- Added an async job layer to the FastAPI app with /jobs/review, /jobs/batch, /jobs, /jobs/{job_id}, and /jobs/{job_id}/artifacts so review execution can be watched instead of waiting on a single blocking request.
+- Added a browser console frontend under web/ that launches review jobs, polls progress, shows round-stage updates, and renders final report, latest round debate, judge output, and scorecard directly in the page.
+- Persisted artifact snapshots into completed job records so historical jobs remain viewable in the frontend even after review_repo is reused by later runs.
+- Installed DSPy and added an optional DSPy-backed synthesis path. llm_gan_review/dspy_adapter.py now tries DSPy first for unified synthesis and falls back to the existing client path if DSPy fails.
+- Verified DSPy end-to-end in the packaged layout: a real one-round review completed with synthesis_mode=dspy and wrote a fresh review_repo under program/.
+2026-03-18: Unified batch reporting to the outer final_report directory. Batch runs now export FINAL_BATCH_REPORT, LEADERBOARD, insights, manifest, and per-paper FINAL_REPORT/CN/JP/EG bundles into final_report/<timestamp>_batch. Verified with a 2-paper batch run from ../essay.
+2026-03-18: Simplified final_report for non-technical users. Batch exports now keep only FINAL_BATCH_REPORT plus per-paper FINAL_REPORT/CN/JP/EG in final_report/<timestamp>_batch, while manifests and diagnostics remain under program/batch_runs.
+2026-03-18: Added multilingual batch-final packaging. Each final_report/<timestamp>_batch directory now includes FINAL_BATCH_REPORT.md plus CN.md, JP.md, and EG.md translations for the batch summary itself.
+2026-03-18: Upgraded the browser console into a debate viewer. API artifacts now expose structured round snapshots, and the frontend renders round-by-round critic/defender/PUA/judge cards instead of only final text panes.
+2026-03-18: Added an essay-aware paper picker to the frontend. The API now lists PDFs from ../essay via /papers, and the UI exposes them as a dropdown while still allowing manual path edits.
+2026-03-18: Added an "All above" paper picker option that submits every PDF from ../essay as a batch job, and created a root-level Windows shortcut start_program.url pointing to http://127.0.0.1:8000/.
+2026-03-18: Replaced the fragile paper-path field with a file-upload workflow. The frontend now has a "选择论文文件" button that uploads PDFs into ../essay via /papers/upload, then renders a checkbox library for one-paper or multi-paper runs.
+2026-03-18: Added a frontend "一键清空历史记录和运行文件" action backed by /admin/cleanup. It deletes runtime-generated review_repo, batch_runs, api_runs, and final_report contents, while preserving essay, api_settings, and source code.

@@ -1,0 +1,200 @@
+{
+  "run_id": "batch_20260318_070557_895922",
+  "kind": "batch",
+  "created_at": "2026-03-18T07:05:57.895922Z",
+  "request": {
+    "entries": [
+      {
+        "paper": "CUFE at SemEval-2016.pdf",
+        "rounds": 2,
+        "code_dir": null,
+        "run_command": null
+      },
+      {
+        "paper": "Exploiting BERT for End-to-End Aspect-based Sentiment Analysis∗.pdf",
+        "rounds": 2,
+        "code_dir": null,
+        "run_command": null
+      }
+    ]
+  },
+  "result": {
+    "paper_count": 2,
+    "manifest": [
+      {
+        "paper": "CUFE at SemEval-2016.pdf",
+        "paper_title": "CUFE at SemEval-2016 Task 4: A Gated Recurrent Model for Sentiment Classiﬁcation",
+        "review_mode": "evidence",
+        "requested_rounds": 2,
+        "final_recommendation": "weak_reject",
+        "overall_score": 2.2,
+        "canonical_issue_count": 5,
+        "issues_path": "C:\\Users\\zzyyds\\Desktop\\全自动化胡说八道学术机\\program\\review_repo\\reviews\\issues.json",
+        "scorecard_path": "C:\\Users\\zzyyds\\Desktop\\全自动化胡说八道学术机\\program\\review_repo\\reviews\\FINAL_SCORECARD.json",
+        "target_dir": "C:\\Users\\zzyyds\\Desktop\\全自动化胡说八道学术机\\program\\review_repo"
+      },
+      {
+        "paper": "Exploiting BERT for End-to-End Aspect-based Sentiment Analysis∗.pdf",
+        "paper_title": "Exploiting BERT for End-to-End Aspect-based Sentiment Analysis∗",
+        "review_mode": "evidence",
+        "requested_rounds": 2,
+        "final_recommendation": "weak_reject",
+        "overall_score": 1.4,
+        "canonical_issue_count": 15,
+        "issues_path": "C:\\Users\\zzyyds\\Desktop\\全自动化胡说八道学术机\\program\\review_repo\\reviews\\issues.json",
+        "scorecard_path": "C:\\Users\\zzyyds\\Desktop\\全自动化胡说八道学术机\\program\\review_repo\\reviews\\FINAL_SCORECARD.json",
+        "target_dir": "C:\\Users\\zzyyds\\Desktop\\全自动化胡说八道学术机\\program\\review_repo"
+      }
+    ],
+    "aggregate": {
+      "paper_count": 2,
+      "average_score": 1.8,
+      "recommendation_counts": {
+        "weak_reject": 2
+      },
+      "mode_counts": {
+        "evidence": 2
+      },
+      "unsupported_claim_breakdown": {
+        "missing_table_support": 8,
+        "missing_rank_support": 0,
+        "partial_metric_support": 0,
+        "missing_metric_support": 2,
+        "metric_mismatch_risk": 0,
+        "reference_not_grounded": 0
+      },
+      "highest_score": 2.2,
+      "lowest_score": 1.4,
+      "ranking": [
+        {
+          "paper": "CUFE at SemEval-2016.pdf",
+          "paper_title": "CUFE at SemEval-2016 Task 4: A Gated Recurrent Model for Sentiment Classiﬁcation",
+          "review_mode": "evidence",
+          "requested_rounds": 2,
+          "overall_score": 2.2,
+          "final_recommendation": "weak_reject",
+          "canonical_issue_count": 5
+        },
+        {
+          "paper": "Exploiting BERT for End-to-End Aspect-based Sentiment Analysis∗.pdf",
+          "paper_title": "Exploiting BERT for End-to-End Aspect-based Sentiment Analysis∗",
+          "review_mode": "evidence",
+          "requested_rounds": 2,
+          "overall_score": 1.4,
+          "final_recommendation": "weak_reject",
+          "canonical_issue_count": 15
+        }
+      ]
+    },
+    "insights": {
+      "top_issue_categories": [
+        [
+          "evidence",
+          16
+        ],
+        [
+          "other",
+          6
+        ],
+        [
+          "embedding",
+          2
+        ],
+        [
+          "metrics",
+          2
+        ],
+        [
+          "novelty",
+          2
+        ]
+      ],
+      "category_examples": {
+        "evidence": [
+          "Lack of Novelty and Justification for \"Insightful Baselines\"",
+          "Unsubstantiated State-of-the-Art (SOTA) Claim",
+          "Contentious Claim of \"Standardization\" and \"Ignored by Previous Works\"",
+          "Absence of Empirical Data"
+        ],
+        "other": [
+          "Vague Definition of \"State-of-the-Art\"",
+          "Unsupported claim",
+          "Unsupported claim: Following these settings, we train 5 models with different random seeds and report the av..."
+        ],
+        "embedding": [
+          "Unsupported claim"
+        ],
+        "reproducibility": [
+          "Metric claim lacks metric support: After training 1000 steps, we con- duct model selection on the development set for very 1..."
+        ],
+        "novelty": [
+          "Unjustified Claims of \"Insightful Baselines\" and Lack of Novelty (Canonical Issue C001, C006):** The"
+        ],
+        "metrics": [
+          "Lack of Verifiability:** The most significant risk is the complete inability to verify any performan"
+        ]
+      },
+      "top_statuses": [
+        [
+          "open",
+          26
+        ],
+        [
+          "partially_resolved",
+          2
+        ],
+        [
+          "responded",
+          2
+        ]
+      ],
+      "common_persistent_issues": [
+        [
+          "Unsupported claim",
+          4
+        ],
+        [
+          "Contentious Claim of \"Standardization\" and \"Ignored by Previous Works\"",
+          2
+        ],
+        [
+          "Metric claim lacks metric support: After training 1000 steps, we con- duct model selection on the development set for very 1...",
+          2
+        ],
+        [
+          "Unsubstantiated State-of-the-Art (SOTA) Claim",
+          2
+        ],
+        [
+          "Unsupported claim: Fig- ure 3 illustrate the comparative results between the BERT-based models and those kee...",
+          2
+        ]
+      ],
+      "unsupported_claim_breakdown": {
+        "missing_table_support": 8,
+        "missing_rank_support": 0,
+        "partial_metric_support": 0,
+        "missing_metric_support": 2,
+        "metric_mismatch_risk": 0,
+        "reference_not_grounded": 0
+      },
+      "strongest_paper": {
+        "paper": "CUFE at SemEval-2016.pdf",
+        "paper_title": "CUFE at SemEval-2016 Task 4: A Gated Recurrent Model for Sentiment Classiﬁcation",
+        "overall_score": 2.2,
+        "recommendation": "weak_reject",
+        "review_mode": "evidence"
+      },
+      "weakest_paper": {
+        "paper": "Exploiting BERT for End-to-End Aspect-based Sentiment Analysis∗.pdf",
+        "paper_title": "Exploiting BERT for End-to-End Aspect-based Sentiment Analysis∗",
+        "overall_score": 1.4,
+        "recommendation": "weak_reject",
+        "review_mode": "evidence"
+      }
+    },
+    "leaderboard_markdown": "# Batch Leaderboard\n\n- paper_count: 2\n- average_score: 1.8\n- recommendation_counts: {'weak_reject': 2}\n- mode_counts: {'evidence': 2}\n\n| Rank | Paper | Mode | Score | Recommendation | Canonical Issues |\n| --- | --- | --- | --- | --- | --- |\n| 1 | CUFE at SemEval-2016.pdf | evidence | 2.2 | weak_reject | 5 |\n| 2 | Exploiting BERT for End-to-End Aspect-based Sentiment Analysis∗.pdf | evidence | 1.4 | weak_reject | 15 |",
+    "insights_markdown": "# Batch Insights\n\n## Strongest Paper\n- CUFE at SemEval-2016.pdf | title=CUFE at SemEval-2016 Task 4: A Gated Recurrent Model for Sentiment Classiﬁcation | mode=evidence | score=2.2 | recommendation=weak_reject\n\n## Weakest Paper\n- Exploiting BERT for End-to-End Aspect-based Sentiment Analysis∗.pdf | title=Exploiting BERT for End-to-End Aspect-based Sentiment Analysis∗ | mode=evidence | score=1.4 | recommendation=weak_reject\n\n## Top Issue Categories\n- evidence: 16\n- other: 6\n- embedding: 2\n- metrics: 2\n- novelty: 2\n\n## Category Examples\n- embedding: Unsupported claim\n- evidence: Lack of Novelty and Justification for \"Insightful Baselines\", Unsubstantiated State-of-the-Art (SOTA) Claim, Contentious Claim of \"Standardization\" and \"Ignored by Previous Works\", Absence of Empirical Data\n- metrics: Lack of Verifiability:** The most significant risk is the complete inability to verify any performan\n- novelty: Unjustified Claims of \"Insightful Baselines\" and Lack of Novelty (Canonical Issue C001, C006):** The\n- other: Vague Definition of \"State-of-the-Art\", Unsupported claim, Unsupported claim: Following these settings, we train 5 models with different random seeds and report the av...\n- reproducibility: Metric claim lacks metric support: After training 1000 steps, we con- duct model selection on the development set for very 1...\n\n## Top Statuses\n- open: 26\n- partially_resolved: 2\n- responded: 2\n\n## Unsupported Claim Breakdown\n- missing_table_support: 8\n- missing_rank_support: 0\n- partial_metric_support: 0\n- missing_metric_support: 2\n- metric_mismatch_risk: 0\n- reference_not_grounded: 0\n\n## Common Persistent Issues\n- Unsupported claim: 4\n- Contentious Claim of \"Standardization\" and \"Ignored by Previous Works\": 2\n- Metric claim lacks metric support: After training 1000 steps, we con- duct model selection on the development set for very 1...: 2\n- Unsubstantiated State-of-the-Art (SOTA) Claim: 2\n- Unsupported claim: Fig- ure 3 illustrate the comparative results between the BERT-based models and those kee...: 2",
+    "final_batch_report_markdown": "# Final Batch Report\n\n## Overview\n- Papers reviewed: 2\n- Average score: 1.8\n- Recommendation counts: {'weak_reject': 2}\n- Review mode counts: {'evidence': 2}\n- Unsupported claim breakdown: {'missing_table_support': 8, 'missing_rank_support': 0, 'partial_metric_support': 0, 'missing_metric_support': 2, 'metric_mismatch_risk': 0, 'reference_not_grounded': 0}\n\n## Strongest Paper\n- CUFE at SemEval-2016.pdf | title=CUFE at SemEval-2016 Task 4: A Gated Recurrent Model for Sentiment Classiﬁcation | mode=evidence | score=2.2 | recommendation=weak_reject\n\n## Weakest Paper\n- Exploiting BERT for End-to-End Aspect-based Sentiment Analysis∗.pdf | title=Exploiting BERT for End-to-End Aspect-based Sentiment Analysis∗ | mode=evidence | score=1.4 | recommendation=weak_reject\n\n## Common Risk Categories\n- evidence: 16 papers/issues surfaced this risk. Examples: Lack of Novelty and Justification for \"Insightful Baselines\", Unsubstantiated State-of-the-Art (SOTA) Claim, Contentious Claim of \"Standardization\" and \"Ignored by Previous Works\"\n- other: 6 papers/issues surfaced this risk. Examples: Vague Definition of \"State-of-the-Art\", Unsupported claim, Unsupported claim: Following these settings, we train 5 models with different random seeds and report the av...\n- embedding: 2 papers/issues surfaced this risk. Examples: Unsupported claim\n- metrics: 2 papers/issues surfaced this risk. Examples: Lack of Verifiability:** The most significant risk is the complete inability to verify any performan\n- novelty: 2 papers/issues surfaced this risk. Examples: Unjustified Claims of \"Insightful Baselines\" and Lack of Novelty (Canonical Issue C001, C006):** The\n\n## Status Distribution\n- open: 26\n- partially_resolved: 2\n- responded: 2\n\n## Persistent Risks\n- Unsupported claim: persisted across rounds in 4 paper(s)\n- Contentious Claim of \"Standardization\" and \"Ignored by Previous Works\": persisted across rounds in 2 paper(s)\n- Metric claim lacks metric support: After training 1000 steps, we con- duct model selection on the development set for very 1...: persisted across rounds in 2 paper(s)\n- Unsubstantiated State-of-the-Art (SOTA) Claim: persisted across rounds in 2 paper(s)\n- Unsupported claim: Fig- ure 3 illustrate the comparative results between the BERT-based models and those kee...: persisted across rounds in 2 paper(s)\n\n## Ranking\n1. CUFE at SemEval-2016.pdf | mode=evidence | score=2.2 | recommendation=weak_reject\n2. Exploiting BERT for End-to-End Aspect-based Sentiment Analysis∗.pdf | mode=evidence | score=1.4 | recommendation=weak_reject\n\n## Per-Paper Outputs\n- CUFE at SemEval-2016.pdf -> C:\\Users\\zzyyds\\Desktop\\全自动化胡说八道学术机\\program\\review_repo | mode=evidence | score=2.2 | recommendation=weak_reject\n- Exploiting BERT for End-to-End Aspect-based Sentiment Analysis∗.pdf -> C:\\Users\\zzyyds\\Desktop\\全自动化胡说八道学术机\\program\\review_repo | mode=evidence | score=1.4 | recommendation=weak_reject"
+  }
+}
