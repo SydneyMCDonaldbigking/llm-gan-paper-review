@@ -25,11 +25,13 @@ from batch_review import (
 )
 from llm_gan_review.config import AppConfig
 from llm_gan_review.review import ReviewOrchestrator
+from runtime_paths import get_bundle_dir, get_runtime_program_dir, get_workspace_dir
 
 
-ROOT_DIR = Path(__file__).resolve().parent
-WORKSPACE_DIR = ROOT_DIR.parent
-WEB_DIR = ROOT_DIR / "web"
+ROOT_DIR = get_runtime_program_dir()
+WORKSPACE_DIR = get_workspace_dir()
+BUNDLE_DIR = get_bundle_dir()
+WEB_DIR = BUNDLE_DIR / "web"
 STATIC_DIR = WEB_DIR / "static"
 CONFIG = AppConfig.load((WORKSPACE_DIR / "api_settings" / "llm_api_config.json") if (WORKSPACE_DIR / "api_settings" / "llm_api_config.json").exists() else (ROOT_DIR / "llm_api_config.json"))
 app = FastAPI(title="LLM-GAN Review API", version="0.2.0")
@@ -100,8 +102,15 @@ async def upload_papers(files: list[UploadFile] = File(...)) -> dict:
         target = essay_dir / filename
         content = await upload.read()
         target.write_bytes(content)
-        uploaded.append({"name": filename, "path": str(target.resolve())})
-    return {"uploaded": uploaded, "paper_count": len(uploaded)}
+        uploaded.append(
+            {
+                "name": filename,
+                "path": str(target.resolve()),
+                "saved_to_essay": str(essay_dir.resolve()),
+                "size_bytes": len(content),
+            }
+        )
+    return {"uploaded": uploaded, "paper_count": len(uploaded), "essay_dir": str(essay_dir.resolve())}
 
 
 @app.get("/reviews/history")

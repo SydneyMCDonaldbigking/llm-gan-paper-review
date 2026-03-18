@@ -7,6 +7,10 @@ program/review_repo/
 program/batch_runs/
 program/api_runs/
 final_report/
+dist/
+program/dist/
+program/build/
+program/*.spec
 
 # Local environment / editor noise
 .DS_Store

@@ -290,7 +290,7 @@ function bindPaperPicker() {
       });
       const uploadedNames = (result.uploaded || []).map((item) => item.name);
       await loadPapers(uploadedNames);
-      document.getElementById("uploadHint").textContent = `已上传 ${uploadedNames.length} 篇论文。`;
+      document.getElementById("uploadHint").textContent = `已上传 ${uploadedNames.length} 篇论文到 ${result.essay_dir}。`;
     } catch (error) {
       document.getElementById("uploadHint").textContent = `上传失败：${error.message}`;
     } finally {
